@@ -1,0 +1,17 @@
+{% url 'signUp' %}
+{% url 'logIn' %}
+{% url 'aboutUs' %}
+{% url 'faqs' %}
+{% url 'contact' %}
+{% url 'help' %}
+{% url 'censusPage' %}
+{% url 'contactSubmit' %}
+{% url 'forgotPassword' %}
+{% url 'resetPassword' %}
+{% url 'success' %}
+
+
+Superuser:
+Shadow_Unit
+shadow.unit@gmail.com
+T@ki2003002
