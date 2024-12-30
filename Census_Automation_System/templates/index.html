@@ -43,51 +43,103 @@
     <!--Start fropm here with Navbar-->
     <nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
         <div class="container-fluid">
+            <!-- Logo Section -->
             <a class="navbar-brand" href="#">
-                <img src="/static/images/bangladesh.jpg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top"> Population Census 2k24
+                <img src="/static/images/bangladesh.jpg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                Population Census 2k24
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+    
+            <!-- Toggler Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <!-- Navbar Content -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- Home Link -->
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'homePage' %}">Home</a>
                     </li>
-                    
-                    {% if user.is_authenticated %}
-                    <li class='nav-item'>
-                      <form method="POST" action="{% url 'logOut' %}" style="display: inline;">
-                      {% csrf_token %}
-                      <a class="nav-link" href="{% url 'logOut' %}">Log-Out</a>
-                      </button>
-                      </form>
-                    </li>
-                  {% else %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logIn' %}">Log In</a></li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'signUp' %}">Sign Up</a></li>
-                  {% endif %}
-      
+    
+    
+                    <!-- About Link -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'aboutUs' %}">About</a>
                     </li>
+    
+                    <!-- FAQs Link -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'faqs' %}">FAQs</a>
                     </li>
+    
+                    <!-- Contact Link -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'contact' %}">Contact</a>
                     </li>
+    
+                    <!-- Help Link -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'help' %}">Help</a>
-                    </li>
+
+                    </li> <!-- Authenticated User Section -->
+                    {% if user.is_authenticated %}
+                        <!-- User Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" 
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <span>{{ census.full_name }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <h6 class="dropdown-header text-muted">Manage Your Profile</h6>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{% url 'dashboard' %}">
+                                        <i class="bi bi-person-badge me-2"></i> View Form
+                                    </a>
+                                </li>
+                                {% if census %}
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{% url 'update_form' pk=census.nid_or_birth %}">
+                                        <i class="bi bi-pencil-square me-2"></i> Update Form
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center disabled" href="#">
+                                        <i class="bi bi-x-circle me-2"></i> No Form Available
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="POST" action="{% url 'logOut' %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item d-flex align-items-center">
+                                            <i class="bi bi-box-arrow-right me-2"></i> Log Out
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                    {% else %}
+                        <!-- Log In and Sign Up Links -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logIn' %}">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'signUp' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
                 </ul>
-
-
             </div>
         </div>
     </nav>
+    
+    
 
 
     <!--Add carousel-->
@@ -158,6 +210,7 @@
             </p>
         </div>
     </div>
+
     
     <script>
         document.getElementById('redirectButton').addEventListener('click', function() {
@@ -239,28 +292,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!--Real-time update of census process-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        async function fetchCensusStatus() {
-            try {
-                const response = await axios.get('https://api.example.com/census-status');
-                const data = response.data;
+<script>
+    async function fetchCensusStatus() {
+        try {
+            // Fetch data from the backend endpoint
+            const response = await axios.get('/realtime-data/');
+            const data = response.data;
 
-                document.getElementById('total-submissions').textContent = data.totalSubmissions;
-                document.getElementById('regions-covered').textContent = data.regionsCovered;
-                document.getElementById('percentage-completed').textContent = data.percentageCompleted;
-                document.getElementById('urban-submissions').textContent = data.urbanSubmissions;
-                document.getElementById('rural-submissions').textContent = data.ruralSubmissions;
-            } catch (error) {
-                console.error('Error fetching census status:', error);
-            }
+            // Update the HTML elements with fetched data
+            document.getElementById('total-submissions').textContent = data.total_submissions;
+            document.getElementById('regions-covered').textContent = data.regions_covered;
+            document.getElementById('percentage-completed').textContent = data.percentage_completed + '%';
+            document.getElementById('urban-submissions').textContent = data.urban_submissions + '%';
+            document.getElementById('rural-submissions').textContent = data.rural_submissions + '%';
+        } catch (error) {
+            console.error('Error fetching census status:', error);
         }
+    }
 
-        // Fetch census status on page load
-        fetchCensusStatus();
+    // Fetch data on page load
+    fetchCensusStatus();
 
-        // Refresh data every 60 seconds
-        setInterval(fetchCensusStatus, 60000);
-    </script>
+    // Refresh data every 60 seconds
+    setInterval(fetchCensusStatus, 60000);
+</script>
 </body>
 
-</html>
+</html> 

@@ -19,6 +19,11 @@ import debug_toolbar
 from django.urls import include, path
 from census import views
 
+#Django admin header customization
+admin.site.site_header = "Census Automation System"
+admin.site.site_title = "See All Registered Users From Here"
+admin.site.index_title = "Welcome to Nationwide Census Program"
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('__debug__/', include(debug_toolbar.urls)),
@@ -36,4 +41,7 @@ urlpatterns = [
     path("Success/", views.success, name='success'),
     path("LogOut/", views.logOut, name='logOut'),
     path('census/', include('census.urls')),  # Ensure this line is present
+    path('realtime-data/', views.fetch_realtime_data, name='realtime_data'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('update-form/<int:pk>/', views.update_form, name='update_form'),
 ]

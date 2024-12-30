@@ -1,44 +1,3 @@
-"""from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from .models import CensusData
-from .forms import CensusDataForm
-
-def census_form_view(request):
-    if request.method == 'POST':
-        full_name = request.POST.get('fullName')
-        gender = request.POST.get('gender')
-        dob = request.POST.get('dob')
-        marital_status = request.POST.get('marital_status')
-        # Add all other fields in a similar way
-
-        census_data = CensusData(
-            full_name=full_name,
-            gender=gender,
-            dob=dob,
-            marital_status=marital_status,
-            # Map all other fields here
-        )
-        census_data.save()
-
-        return redirect('success')
-    return render(request, 'census/census_page.html')
-
-
-def census_form_view(request):
-    if request.method == 'POST':
-        # Assuming you have a form to handle the census data
-        form = CensusDataForm(request.POST)  # Replace with your actual form name
-
-        if form.is_valid():
-            form.save()  # Save the form data to the database
-            return redirect('success')  # Redirect to a success page after saving
-        else:
-            # Handle form errors if necessary
-            return render(request, 'census_page.html', {'form': form})  # Render the form with errors
-
-    else:
-        form = CensusDataForm()  # Initialize the form
-        return render(request, 'census_page.html', {'form': form})"""
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
@@ -49,10 +8,24 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from .forms import CensusForm  # Import the form
 from django.http import JsonResponse
+from .models import CensusData
+from django.shortcuts import get_object_or_404
+from django.contrib.sessions.models import Session
+
 
 
 def homePage(request):
-    return render(request, "index.html")
+    census = None
+    if request.user.is_authenticated:
+        # Fetch all entries for the user
+        census_entries = CensusData.objects.filter(user=request.user)
+
+        # Use the latest entry by the primary key (nid_or_birth)
+        census = census_entries.order_by('-nid_or_birth').first()
+    
+    return render(request, 'index.html', {'census': census})
+
+
 
 def aboutUs(request):
     return render(request, "about.html")
@@ -60,13 +33,18 @@ def aboutUs(request):
 def censusPage(request):
     if request.method == 'POST':
         form = CensusForm(request.POST)
+        
         if form.is_valid():
+            # Assign the current user to the form before saving
+            form.instance.user = request.user
+            
             form.save()
             return redirect('success')  # Replace 'success' with the name of your success page or URL
         else:
             return JsonResponse({'errors': form.errors}, status=400)  # Return errors as JSON
     else:
         form = CensusForm()
+
     return render(request, 'census_page.html', {'form': form})
 
 def contactSubmit(request):
@@ -151,6 +129,77 @@ def success(request):
     return render(request, "success.html")   
 
 
-def logOut(request):
+'''def logOut(request):
+
     logout(request)
-    return redirect('homePage')  # Redirect to homepage or another page after logout
+    return redirect('homePage')  # Redirect to homepage or another page after logout'''
+
+
+def logOut(request):
+    # Log out the user
+    logout(request)
+    # Delete the session if it exists
+    if request.session.session_key:
+        Session.objects.filter(session_key=request.session.session_key).delete()
+    
+    return redirect('homePage')
+
+def fetch_realtime_data(request):
+    # 1. Total Submissions
+    total_submissions = CensusData.objects.count()
+    
+    # 2. Regions Covered (Unique Districts)
+    regions_covered = CensusData.objects.values('city').distinct().count()
+    
+    # 3. Percentage Completed
+    percentage_completed = (total_submissions / 1800) * 100
+    
+    # 4. Rural Submissions Percentage
+    rural_count = CensusData.objects.filter(living_area__icontains="rural").count()
+    rural_percentage = (rural_count / total_submissions) * 100 if total_submissions > 0 else 0
+
+    # 5. Urban Submissions Percentage
+    urban_percentage = 100 - rural_percentage  # As urban is complementary to rural
+
+    
+    # Prepare data for JSON response
+    data = {
+        'total_submissions': total_submissions,
+        'regions_covered': regions_covered,
+        'percentage_completed': round(percentage_completed, 2),
+        'rural_submissions': round(rural_percentage, 2),
+        'urban_submissions': round(urban_percentage, 2),
+    }
+    return JsonResponse(data)
+
+
+
+def update_form(request, pk):
+    census_entry = get_object_or_404(CensusData, nid_or_birth=pk, user=request.user)
+
+    if request.method == 'POST':
+        form = CensusForm(request.POST, instance=census_entry)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = CensusForm(instance=census_entry)
+
+    return render(request, 'update_form.html', {'form': form})
+
+
+def dashboard_view(request):
+    # Ensure user is authenticated
+    if not request.user.is_authenticated:
+        return redirect('login')  # Redirect to login if not authenticated
+
+    # Fetch census data for the logged-in user
+    census_entry = get_object_or_404(CensusData, user=request.user)
+    
+    # Pass data to the template
+    context = {
+        'user': request.user,
+        'census_entry': census_entry,
+    }
+    return render(request, 'dashboard.html', context)
+

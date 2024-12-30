@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .navbar-nav .nav-link {
+            font-size: 1.2rem;
+            /* Increase the font size */
+            padding: 1rem 1.2rem;
+            /* Increase the padding */
+        }
+        
+        .circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border: 2px solid #007bff;
+            margin: 10px auto;
+            text-align: center;
+        }
+        
+        .circle h5 {
+            margin: 0;
+        }
+        
+        .circle span {
+            display: block;
+            font-size: 1.5rem;
+            color: #e84880;
+        }
+    </style>
+    <title>Census Automation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <!-- Logo Section -->
+            <a class="navbar-brand" href="#">
+                <img src="/static/images/bangladesh.jpg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                Population Census 2k24
+            </a>
+    
+            <!-- Toggler Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- Home Link -->
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url 'homePage' %}">Home</a>
+                    </li>
+    
+    
+                    <!-- About Link -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'aboutUs' %}">About</a>
+                    </li>
+    
+                    <!-- FAQs Link -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'faqs' %}">FAQs</a>
+                    </li>
+    
+                    <!-- Contact Link -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                    </li>
+    
+                    <!-- Help Link -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'help' %}">Help</a>
+
+                    </li> 
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard Content -->
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active">Dashboard</a>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-md-9">
+                <h2>Welcome, {{ user.username }}!</h2>
+                <p>This is your dashboard where you can view your profile information.</p>
+                
+                <!-- User Profile Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Your Profile Information
+                    </div>
+                    <div class="card-body">
+                        <!-- Personal Information -->
+                        <h5 class="mb-3"><strong>Personal Information</strong></h5>
+                        <p><strong>Full Name:</strong> {{ census_entry.full_name }}</p>
+                        <p><strong>NID/Birth Certificate No:</strong> {{ census_entry.nid_or_birth }}</p>
+                        <p><strong>Gender:</strong> {{ census_entry.gender }}</p>
+                        <p><strong>Date of Birth:</strong> {{ census_entry.dob }}</p>
+                        <p><strong>Marital Status:</strong> {{ census_entry.marital_status }}</p>
+                    
+                        <!-- Contact Information -->
+                        <h5 class="mt-4 mb-3"><strong>Contact Information</strong></h5>
+                        <p><strong>Address:</strong> {{ census_entry.address }}</p>
+                        <p><strong>City:</strong> {{ census_entry.city }}</p>
+                        <p><strong>Division:</strong> {{ census_entry.division }}</p>
+                        <p><strong>Zip Code:</strong> {{ census_entry.zip_code }}</p>
+                        <p><strong>Country:</strong> {{ census_entry.country }}</p>
+                        <p><strong>Phone:</strong> {{ census_entry.phone }}</p>
+                        <p><strong>Email:</strong> {{ census_entry.email }}</p>
+                    
+                        <!-- Household Information -->
+                        <h5 class="mt-4 mb-3"><strong>Household Information</strong></h5>
+                        <p><strong>Number of Household Members:</strong> {{ census_entry.household_members }}</p>
+                        <p><strong>Household Income:</strong> {{ census_entry.household_income }}</p>
+                        <p><strong>Head of Household:</strong> {{ census_entry.head_of_household }}</p>
+                    
+                        <!-- Employment Information -->
+                        <h5 class="mt-4 mb-3"><strong>Employment Information</strong></h5>
+                        <p><strong>Employment Status:</strong> {{ census_entry.employment_status }}</p>
+                        <p><strong>Occupation:</strong> {{ census_entry.occupation }}</p>
+                        <p><strong>Work Sector:</strong> {{ census_entry.work_sector }}</p>
+                        <p><strong>Monthly Income:</strong> {{ census_entry.monthly_income }}</p>
+                    
+                        <!-- Educational Information -->
+                        <h5 class="mt-4 mb-3"><strong>Educational Information</strong></h5>
+                        <p><strong>Highest Education:</strong> {{ census_entry.highest_education }}</p>
+                        <p><strong>Field of Study:</strong> {{ census_entry.field_of_study }}</p>
+                        <p><strong>Currently Enrolled:</strong> {{ census_entry.currently_enrolled }}</p>
+                    
+                        <!-- Housing Information -->
+                        <h5 class="mt-4 mb-3"><strong>Housing Information</strong></h5>
+                        <p><strong>House Type:</strong> {{ census_entry.house_type }}</p>
+                        <p><strong>House Size:</strong> {{ census_entry.house_size }}</p>
+                        <p><strong>Utilities Available:</strong> {{ census_entry.utilities_available }}</p>
+                        <p><strong>Housing Condition:</strong> {{ census_entry.housing_condition }}</p>
+                        <p><strong>Living Area:</strong> {{ census_entry.living_area }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

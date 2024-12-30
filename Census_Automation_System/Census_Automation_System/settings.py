@@ -10,14 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+"""
+Django settings for Census_Automation_System project.
+"""
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-xlbza@gnfh&0*dbe%l%+go!8k5qka58y)k0o06wj6mg!b(eoqc"
@@ -27,18 +27,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = [
+    'jazzmin',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "census",
-    "debug_toolbar",
+    "census",  # Your app
+    # "debug_toolbar",  # Uncomment if you're using Django Debug Toolbar
 ]
 
 MIDDLEWARE = [
@@ -49,8 +48,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'django_auto_logout.middleware.auto_logout', #added for session handling
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # Uncomment the next line if you want to use django-auto-logout
+    #"django_auto_logout.middleware.AutoLogoutMiddleware",
 ]
 
 ROOT_URLCONF = "Census_Automation_System.urls"
@@ -58,7 +57,7 @@ ROOT_URLCONF = "Census_Automation_System.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR, "templates"],
+        "DIRS": [BASE_DIR / "templates"],  # Set your templates directory
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -66,7 +65,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                'django_auto_logout.context_processors.auto_logout_client',  #Added for session handling
+                # Uncomment if you're using django-auto-logout
+                # "django_auto_logout.context_processors.auto_logout_client",
             ],
         },
     },
@@ -74,10 +74,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "Census_Automation_System.wsgi.application"
 
-
 # Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -85,81 +82,97 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-#Newly added
+# Authentication backends
 AUTHENTICATION_BACKENDS = [
-    'Census_Automation_System.authentication.EmailBackend',  # Your custom backend
-    'django.contrib.auth.backends.ModelBackend',  # Default backend
+    "Census_Automation_System.authentication.EmailBackend",  # Your custom backend
+    "django.contrib.auth.backends.ModelBackend",  # Default backend
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.0/topics/i18n/
-
+# Localization
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-STATICFILES_DIRS = [
-    BASE_DIR, "static"
-]
+# Login/logout URLs
+LOGIN_URL = "logIn"
+LOGOUT_REDIRECT_URL = "homePage"
 
-# settings.py
+# Session settings
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+SESSION_COOKIE_AGE = 1800  # 30 minutes (in seconds)
+SESSION_COOKIE_SECURE = False  # Set True in production with HTTPS
+SESSION_COOKIE_HTTPONLY = True  # Ensures session cookie is not accessible via JavaScript
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Persistent sessions
 
-LOGIN_URL = 'logIn'  # Redirect to login page if the user is not authenticated
-
-# AUTO_LOGOUT settings
+# Auto-logout settings (if using django-auto-logout)
 AUTO_LOGOUT = {
-    'IDLE_TIME': 86400,  
-    'REDIRECT_TO_LOGIN_IMMEDIATELY': True,  # Redirect immediately to login upon session expiry
-    'MESSAGE': 'The session has expired. Please login again to continue.',
+    "IDLE_TIME": 1800,  # Log out users after 30 minutes of inactivity
+    "REDIRECT_TO_LOGIN_IMMEDIATELY": True,  # Redirect users immediately upon session expiry
+    "MESSAGE": "Your session has expired due to inactivity. Please log in again.",
 }
 
+# Debug toolbar (optional)
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
+JAZZMIN_SETTINGS = {
 
-# settings.py
+    # Links to put along the top menu
+    "topmenu_links": [
+        # App with dropdown menu to all its models pages (Permissions checked against models)
+        {"app": "census"},
+    ],
 
-# Set session expiry time (e.g., 30 minutes)
-SESSION_COOKIE_AGE = 1800  # 1800 seconds = 30 minutes
+    # Whether to show the UI customizer on the sidebar
+    "show_ui_builder": True,
+}
 
-# Make the session expire when the browser is closed
-#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
-# Use a secure session cookie
-SESSION_COOKIE_SECURE = True
-
-# Set the session to use cookies only (no URLs)
-SESSION_COOKIE_HTTPONLY = True
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-info",
+    "navbar": "navbar-info navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": True,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "darkly",
+    "dark_mode_theme": "cyborg",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    },
+    "actions_sticky_top": False
+}

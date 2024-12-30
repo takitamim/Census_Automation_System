@@ -14,28 +14,12 @@ class CensusForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check'}),
         required=False)
 
-    currently_enrolled = forms.MultipleChoiceField(
-        label = "Currently Enrolled in Education?",
-        choices=[
-            ('yes', 'Yes'),
-            ('no', 'No')
-        ],
-        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check'}),
-        required=False)
-    
-    head_of_household = forms.MultipleChoiceField(
-        label = "Is the Respondent Head of Household?",
-        choices=[
-            ('yes', 'Yes'),
-            ('no', 'No')
-        ],
-        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check'}),
-        required=False)
     
 
     class Meta:
         model = CensusData
         fields = '__all__'  # Include all fields from the model
+        exclude = ['user']  # Exclude the user field to prevent modification
         labels = {
             # Personal Information
             'full_name': 'Full Name',
@@ -74,6 +58,7 @@ class CensusForm(forms.ModelForm):
             'house_size': 'House Size (in square feet)',
             'utilities_available': 'Utilities Available',
             'housing_condition': 'Condition of the House',
+            'living_area' : 'In which area you are currently living in?',
         }
         # Widgets for enhanced form usability
         widgets = {
@@ -101,6 +86,7 @@ class CensusForm(forms.ModelForm):
                 ('mymensingh', 'Mymensingh')
             ], attrs={'class': 'form-control'}),
 
+
             'work_sector': forms.Select(choices=[
                 ('government', 'Government'),
                 ('private', 'Private'),
@@ -126,6 +112,22 @@ class CensusForm(forms.ModelForm):
                 ('poor', 'Poor')
             ], attrs={'class': 'form-control'}),
 
+            'currently_enrolled' : forms.Select(choices=[
+                ('yes', 'Yes'), 
+                ('no', 'No')
+                ], attrs={'class': 'form-control'}),
+
+            'head_of_household' : forms.Select(choices=[
+                ('yes', 'Yes'), 
+                ('no', 'No')
+                ], attrs={'class': 'form-control'}),
+
+            'living_area' : forms.Select(choices=[
+                ('urban', 'Urban'), 
+                ('rural', 'Rural')
+                ], attrs={'class': 'form-control'}),
+
+
             'country': forms.Select(choices=[
                 ('bangladesh', 'Bangladesh'),
                 ('abroad', 'Abroad')
@@ -139,9 +141,6 @@ class CensusForm(forms.ModelForm):
                 ('other', 'Other')
             ], attrs={'class': 'form-control'}),
 
-            'currently_enrolled': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-
-            'head_of_household': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
 
             'house_type': forms.Select(choices=[
                 ('apartment', 'Apartment'),

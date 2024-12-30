@@ -11,7 +11,7 @@ class CensusDataAdmin(admin.ModelAdmin):
         'head_of_household', 'employment_status', 'occupation', 
         'work_sector', 'monthly_income', 'highest_education', 
         'field_of_study', 'currently_enrolled', 'house_type', 
-        'house_size', 'utilities_available', 'housing_condition'
+        'house_size', 'utilities_available', 'housing_condition', 'living_area'
     )
     
     # Add search functionality for relevant fields
@@ -24,7 +24,7 @@ class CensusDataAdmin(admin.ModelAdmin):
     list_filter = (
         'gender', 'marital_status', 'division', 'employment_status', 
         'highest_education', 'house_type', 'currently_enrolled', 
-        'head_of_household'
+        'head_of_household','living_area'
     )
     
     # Optional: Set how many records to show per page
