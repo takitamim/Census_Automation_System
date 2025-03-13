@@ -176,3 +176,10 @@ JAZZMIN_UI_TWEAKS = {
     },
     "actions_sticky_top": False
 }
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "takitamim.12@gmail.com"  # Replace with your Gmail address
+EMAIL_HOST_PASSWORD = "sxup nqsf jdgf uwez"  # Replace with your Gmail password or app password

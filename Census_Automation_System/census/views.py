@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from .models import CensusData
 from django.shortcuts import get_object_or_404
 from django.contrib.sessions.models import Session
+from django.core.mail import send_mail
 
 
 
@@ -51,6 +52,24 @@ def contactSubmit(request):
     return render(request, "contact_submit.html")
 
 def contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+        
+        # Construct the email content
+        subject = f"New Contact Message from {name}"
+        email_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+        recipient_email = "takitamim.12@gmail.com"
+        
+        # Send email
+        try:
+            send_mail(subject, email_message, email, [recipient_email])
+            return redirect("contact_submit")
+        except Exception as e:
+            print(f"Error: {e}")  # For debugging purposes; you can log this instead.
+            return render(request, "contact.html", {"error": "Failed to send your message. Please try again."})
+
     return render(request, "contact.html")
 
 def faqs(request):
@@ -91,7 +110,6 @@ def signUp(request):
         email = request.POST['email']
         password = request.POST['password']
         confirm_password = request.POST['password2']
-        nid = request.POST['nid_number']
 
         # Check if password and confirm password match
         if password != confirm_password:
