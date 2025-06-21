@@ -209,7 +209,7 @@ def update_form(request, pk):
 def dashboard_view(request):
     # Ensure user is authenticated
     if not request.user.is_authenticated:
-        return redirect('login')  # Redirect to login if not authenticated
+        return redirect('logIn')  # Redirect to login if not authenticated
 
     # Fetch census data for the logged-in user
     census_entry = get_object_or_404(CensusData, user=request.user)

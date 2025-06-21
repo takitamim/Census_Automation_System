@@ -156,4 +156,9 @@ class CensusForm(forms.ModelForm):
             'monthly_income': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
+    def clean_house_size(self):
+        house_size = self.cleaned_data.get('house_size')
+        if house_size is not None and house_size <= 0:
+            raise forms.ValidationError("House size must be a positive number.")
+        return house_size
 
