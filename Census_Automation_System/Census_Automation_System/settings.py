@@ -15,6 +15,7 @@ Django settings for Census_Automation_System project.
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ SECRET_KEY = "django-insecure-xlbza@gnfh&0*dbe%l%+go!8k5qka58y)k0o06wj6mg!b(eoqc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['census-automation-system2k24.onrender.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -103,6 +104,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
