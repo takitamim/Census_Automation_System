@@ -1,0 +1,47 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# SQLite database
+*.sqlite3
+db.sqlite3
+
+# Logs
+*.log
+
+# Django secrets / local settings
+.env
+.env.*
+
+# VS Code settings
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Static and media (optional – keep only if generated during build)
+staticfiles/
+media/
+
+# Coverage/test cache
+.pytest_cache/
+.mypy_cache/
+.coverage
+.cache
+
+# Python packaging junk
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Jupyter Notebook cache
+.ipynb_checkpoints
