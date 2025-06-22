@@ -15,9 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-import debug_toolbar
 from django.urls import include, path
 from census import views
+from census.views import download_db
 
 #Django admin header customization
 admin.site.site_header = "Census Automation System"
@@ -26,7 +26,6 @@ admin.site.index_title = "Welcome to Nationwide Census Program"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('__debug__/', include(debug_toolbar.urls)),
     path("", views.homePage, name='homePage'),
     path("About/", views.aboutUs, name='aboutUs'),
     path("CensusPage/", views.censusPage, name='censusPage'),
@@ -44,4 +43,5 @@ urlpatterns = [
     path('realtime-data/', views.fetch_realtime_data, name='realtime_data'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('update-form/<int:pk>/', views.update_form, name='update_form'),
+    path('download-db/', download_db, name='download_db'),
 ]

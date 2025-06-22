@@ -12,8 +12,14 @@ from .models import CensusData
 from django.shortcuts import get_object_or_404
 from django.contrib.sessions.models import Session
 from django.core.mail import send_mail
+from django.http import FileResponse
+import os
+from django.contrib.admin.views.decorators import staff_member_required
 
-
+@staff_member_required
+def download_db(request):
+    db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'db.sqlite3')
+    return FileResponse(open(db_path, 'rb'), as_attachment=True, filename='db.sqlite3')
 
 def homePage(request):
     census = None

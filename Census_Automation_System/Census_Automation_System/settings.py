@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-xlbza@gnfh&0*dbe%l%+go!8k5qka58y)k0o06wj6mg!b(eoqc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['census-automation-system2k24.onrender.com']
+ALLOWED_HOSTS = ['census-automation-system2k24.onrender.com', '127.0.0.1', 'localhost']
 
 # Application definition
 INSTALLED_APPS = [
