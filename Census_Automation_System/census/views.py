@@ -108,6 +108,25 @@ def logIn(request):
 
 
 def resetPassword(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return redirect('resetPassword')
+
+        try:
+            user = User.objects.get(email=email)
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, "Password successfully updated.")
+            return redirect('logIn')
+        except User.DoesNotExist:
+            messages.error(request, "No user found with this email.")
+            return redirect('resetPassword')
+
     return render(request, "reset_password.html")
 
 
